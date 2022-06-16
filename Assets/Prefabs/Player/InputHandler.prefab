@@ -263,9 +263,9 @@ MonoBehaviour:
   m_UiScaleMode: 1
   m_ReferencePixelsPerUnit: 100
   m_ScaleFactor: 1
-  m_ReferenceResolution: {x: 1920, y: 1080}
+  m_ReferenceResolution: {x: 1080, y: 1920}
   m_ScreenMatchMode: 0
-  m_MatchWidthOrHeight: 1
+  m_MatchWidthOrHeight: 0.5
   m_PhysicalUnit: 3
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
@@ -303,4 +303,5 @@ MonoBehaviour:
   _joystick: {fileID: 388030891637969040}
   _outerJoystickObj: {fileID: 5550525639072505003}
   _innerJoystickObj: {fileID: 7125173241823732632}
+  _canvas: {fileID: 8907496099537928362}
   _camera: {fileID: 0}

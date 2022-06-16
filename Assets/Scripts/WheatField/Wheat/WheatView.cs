@@ -1,6 +1,8 @@
-﻿namespace WheatField.Wheat
+﻿using UnityEngine;
+
+namespace WheatField.Wheat
 {
-    public class WheatView : IWheatView
+    public class WheatView : MonoBehaviour, IWheatView
     {
         
     }

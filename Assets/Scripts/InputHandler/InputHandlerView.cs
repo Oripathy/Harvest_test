@@ -9,13 +9,15 @@ namespace InputHandler
         [SerializeField] private GameObject _joystick;
         [SerializeField] private GameObject _outerJoystickObj;
         [SerializeField] private GameObject _innerJoystickObj;
+        [SerializeField] private Canvas _canvas;
         [SerializeField] private Camera _camera;
 
         private Image _outerJoystick;
         private Image _innerJoystick;
-        private bool _isTouched;
         private Vector3 _moveDirection;
         private Vector2 _startPosition;
+        private float _scale;
+        private bool _isTouched;
 
         public event Action<Vector3> DirectionReceived;
 
@@ -23,10 +25,10 @@ namespace InputHandler
         {
             _outerJoystick = _outerJoystickObj.GetComponent<Image>();
             _innerJoystick = _innerJoystickObj.GetComponent<Image>();
+            _scale = _canvas.scaleFactor;
             _joystick.SetActive(false);
             _camera = Camera.main.transform.GetChild(0).GetComponent<Camera>();
             GetComponent<Canvas>().worldCamera = _camera;
-            Debug.Log(GetComponent<Canvas>().worldCamera);
         }
 
         private void Update()
@@ -37,10 +39,10 @@ namespace InputHandler
                 _joystick.SetActive(true);
                 _startPosition = new Vector2
                 {
-                    x = Input.mousePosition.x / _outerJoystick.rectTransform.sizeDelta.x,
-                    y = Input.mousePosition.y / _outerJoystick.rectTransform.sizeDelta.y
+                    x = Input.mousePosition.x / _outerJoystick.rectTransform.sizeDelta.x / _scale,
+                    y = Input.mousePosition.y / _outerJoystick.rectTransform.sizeDelta.y / _scale
                 };
-                _outerJoystick.rectTransform.anchoredPosition = Input.mousePosition;
+                _outerJoystick.rectTransform.anchoredPosition = Input.mousePosition / _scale;
                 Debug.Log(_outerJoystick.rectTransform.anchoredPosition + " " + Input.mousePosition);
             }
             else if (Input.GetMouseButtonUp(0))
@@ -56,8 +58,8 @@ namespace InputHandler
             {
                 var position = new Vector2
                 {
-                    x = Input.mousePosition.x / _outerJoystick.rectTransform.sizeDelta.x,
-                    y = Input.mousePosition.y / _outerJoystick.rectTransform.sizeDelta.y
+                    x = Input.mousePosition.x / _outerJoystick.rectTransform.sizeDelta.x / _scale,
+                    y = Input.mousePosition.y / _outerJoystick.rectTransform.sizeDelta.y / _scale
                     // x = Input.mousePosition.x,
                     // y = Input.mousePosition.y
                 };
