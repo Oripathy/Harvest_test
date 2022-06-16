@@ -13,5 +13,11 @@ namespace Player
         public float RotationSpeed { get; private set; }
         public Vector3 MoveDirection { get; set; }
         public BaseState CurrentState { get; set; }
+
+        public PlayerModel()
+        {
+            MoveSpeed = 2f;
+            RotationSpeed = 540f;
+        }
     }
 }

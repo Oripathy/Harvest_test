@@ -19,7 +19,7 @@ namespace Base
 
         public virtual void OnEnter()
         {
-            
+            _view.Animator.SetBool(_animBoolName, true);
         }
 
         public virtual void Update()
@@ -29,7 +29,7 @@ namespace Base
 
         public virtual void OnExit()
         {
-            
+            _view.Animator.SetBool(_animBoolName, false);
         }
 
         private protected abstract void SwitchState();

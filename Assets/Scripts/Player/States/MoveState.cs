@@ -14,7 +14,7 @@ namespace Player.States
         {
             base.Update();
             _view.Rigidbody.MovePosition(_view.Transform.position +
-                                         _model.MoveDirection * _model.MoveSpeed * Time.fixedDeltaTime);
+                                         _model.MoveDirection * (_model.MoveSpeed * Time.fixedDeltaTime));
             _presenter.RotateAt(_model.MoveDirection);
         }
 

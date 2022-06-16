@@ -1,4 +1,5 @@
 ﻿using Base;
+using UnityEngine;
 
 namespace Player.States
 {
@@ -11,7 +12,8 @@ namespace Player.States
 
         private protected override void SwitchState()
         {
-            throw new System.NotImplementedException();
+            if (_model.MoveDirection != Vector3.zero)
+                _presenter.SwitchState<MoveState>();
         }
     }
 }

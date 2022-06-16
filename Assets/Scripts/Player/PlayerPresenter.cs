@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using Base;
+using Player.States;
+using TMPro;
 using UnityEngine;
 
 namespace Player
@@ -9,11 +11,31 @@ namespace Player
     {
         private Dictionary<Type, BaseState> _statesToType;
 
+        public override TPresenter Init<TPresenter>(PlayerModel model, IPlayerView view, UpdateHandler updateHandler)
+        {
+            base.Init<TPresenter>(model, view, updateHandler);
+            _statesToType = new Dictionary<Type, BaseState>
+            {
+                { typeof(IdleState), new IdleState(this, _view, _model, "Idle") },
+                { typeof(MoveState), new MoveState(this, _view, _model, "Move") }
+            };
+
+            _model.CurrentState = _statesToType[typeof(IdleState)];
+            _model.CurrentState.OnEnter();
+            return this as TPresenter;
+        }
+
         public void RotateAt(Vector3 point)
         {
             var destinationRotation = Quaternion.LookRotation(point, Vector3.up);
             _view.Transform.rotation = Quaternion.RotateTowards(_view.Transform.rotation, destinationRotation,
                 _model.RotationSpeed * Time.deltaTime);
+        }
+
+        private protected override void Update()
+        {
+            base.Update();
+            _model.CurrentState.Update();
         }
 
         public T SwitchState<T>()

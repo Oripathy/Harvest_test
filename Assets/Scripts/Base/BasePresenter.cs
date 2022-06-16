@@ -17,12 +17,14 @@ namespace Base
         //     _updateHandler = updateHandler;
         // }
 
-        public virtual void Init(TModel model, TView view, UpdateHandler updateHandler)
+        public virtual TPresenter Init<TPresenter>(TModel model, TView view, UpdateHandler updateHandler)
+            where TPresenter: BasePresenter<TModel, TView>
         {
             _model = model;
             _view = view;
             _updateHandler = updateHandler;
             _updateHandler.UpdateTicked += Update;
+            return this as TPresenter;
         }
 
         private protected virtual void Update()

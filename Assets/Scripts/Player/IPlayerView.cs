@@ -7,5 +7,6 @@ namespace Player
     {
         public Rigidbody Rigidbody { get; }
         public Transform Transform { get; }
+        public Animator Animator { get; }
     }
 }
