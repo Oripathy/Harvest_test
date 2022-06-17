@@ -2,8 +2,8 @@
 
 namespace WheatField
 {
-    public class WheatFieldView : MonoBehaviour
+    public class WheatFieldView : MonoBehaviour, IWheatFieldView
     {
-        
+        public Transform Transform => transform;
     }
 }

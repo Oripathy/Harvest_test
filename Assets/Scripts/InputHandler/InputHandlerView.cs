@@ -29,6 +29,7 @@ namespace InputHandler
             _joystick.SetActive(false);
             _camera = Camera.main.transform.GetChild(0).GetComponent<Camera>();
             GetComponent<Canvas>().worldCamera = _camera;
+            Debug.Log(_scale);
         }
 
         private void Update()
@@ -43,7 +44,6 @@ namespace InputHandler
                     y = Input.mousePosition.y / _outerJoystick.rectTransform.sizeDelta.y / _scale
                 };
                 _outerJoystick.rectTransform.anchoredPosition = Input.mousePosition / _scale;
-                Debug.Log(_outerJoystick.rectTransform.anchoredPosition + " " + Input.mousePosition);
             }
             else if (Input.GetMouseButtonUp(0))
             {

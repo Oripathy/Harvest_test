@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Base;
 using Player.States;
-using TMPro;
 using UnityEngine;
 
 namespace Player
@@ -22,6 +21,8 @@ namespace Player
 
             _model.CurrentState = _statesToType[typeof(IdleState)];
             _model.CurrentState.OnEnter();
+            _model.WheatDetected += OnWheatDetected;
+            _model.WheatNotDetected += OnWheatNotDetected;
             return this as TPresenter;
         }
 
@@ -52,6 +53,16 @@ namespace Player
             }
 
             return null;
+        }
+
+        private void OnWheatDetected()
+        {
+            _view.Animator.SetBool("Harvest", true);
+        }
+
+        private void OnWheatNotDetected()
+        {
+            _view.Animator.SetBool("Harvest", false);
         }
     }
 }
