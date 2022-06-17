@@ -18,7 +18,6 @@ namespace Player.Scythe
             if (other.TryGetComponent<IHarvestable>(out var harvestable))
             {
                 WheatHarvested?.Invoke(harvestable);
-                Debug.Log(harvestable);
             }
         }
     }

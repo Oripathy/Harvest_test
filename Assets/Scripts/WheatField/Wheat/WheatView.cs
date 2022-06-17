@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace WheatField.Wheat
 {
@@ -22,13 +23,17 @@ namespace WheatField.Wheat
         {
             // _wheatLowerPart.SetActive(false);
             // _wheatUpperPart.SetActive(false);
-            WheatHarvested?.Invoke();
+            transform.localScale = new Vector3(1f, 1f, 1f);
+            Quaternion randomRotation;
+            var randomAngle = Random.Range(0f, 90f);
+            randomRotation =
+                new Quaternion(0f, (float) Math.Sin(randomAngle / 2), 0f, (float) Math.Cos(randomAngle / 2));
+            transform.rotation *= randomRotation;
         }
 
         public void Harvest()
         {
             WheatHarvested?.Invoke();
-            Debug.Log("preparing");
         }
     }
 }

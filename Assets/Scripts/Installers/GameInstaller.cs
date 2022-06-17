@@ -6,6 +6,7 @@ using Player;
 using UnityEngine;
 using WheatField;
 using WheatField.Wheat;
+using WheatField.WheatCube;
 
 namespace Installers
 {
@@ -15,6 +16,7 @@ namespace Installers
         [SerializeField] private PlayerView _playerView;
         [SerializeField] private WheatFieldView _wheatFieldView;
         [SerializeField] private WheatView _wheatView;
+        [SerializeField] private WheatCubeView _wheatCubeView;
         [SerializeField] private InputHandlerView _inputHandlerView;
 
         private void Awake()
@@ -24,7 +26,8 @@ namespace Installers
             var player = playerFactory.CreateInstance(new Vector3(2f, 0f, 0f));
             var inputFactory = new InputHandlerFactory(_inputHandlerView, _updateHandler);
             inputFactory.CreateInstance(player);
-            var wheatFactory = new WheatFactory(_updateHandler, _wheatView);
+            var wheatCubeFactory = new WheatCubeFactory(_wheatCubeView, _updateHandler);
+            var wheatFactory = new WheatFactory(_updateHandler, _wheatView, wheatCubeFactory);
             var wheatFieldFactory = new WheatFieldFactory(_updateHandler, _wheatFieldView, wheatFactory);
             wheatFieldFactory.CreateInstance(new Vector3(3f, 0.01f, -3f));
         }

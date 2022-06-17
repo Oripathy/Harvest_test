@@ -4,11 +4,12 @@ Shader "Unlit/Wheat Shader"
     {
         _MainTex ("Texture", 2D) = "white" {}
         _AlphaCutOut ("Alpha CutOut", Range(0, 1)) = 0
+        _Color ("Color", Color) = (1, 1, 1, 1)
     }
     SubShader
     {
         Cull off
-        Tags { "RenderType"="TransparentCutout" }
+        Tags { "RenderType"="TransparencyCutout" }
         LOD 100
 
         Pass
@@ -20,6 +21,7 @@ Shader "Unlit/Wheat Shader"
             #pragma multi_compile_fog
 
             #include "UnityCG.cginc"
+            #include "UnityLightingCommon.cginc"
 
             struct appdata
             {
@@ -30,6 +32,7 @@ Shader "Unlit/Wheat Shader"
             struct v2f
             {
                 float2 uv : TEXCOORD0;
+                fixed4 diff : COLOR0;
                 UNITY_FOG_COORDS(1)
                 float4 vertex : SV_POSITION;
             };
@@ -37,14 +40,19 @@ Shader "Unlit/Wheat Shader"
             sampler2D _MainTex;
             float4 _MainTex_ST;
             float _AlphaCutOut;
+            float4 _Color;
 
-            v2f vert (appdata v)
+            v2f vert (appdata_base v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.uv.x *= 
-                o.uv.x += sin(_Time.y) * 0.5;
+                o.uv = v.texcoord;
+                half3 worldNormal = UnityObjectToWorldNormal(v.normal);
+                half n = max(0, dot(worldNormal, _WorldSpaceLightPos0.xyz));
+                o.diff = n * _LightColor0;
+                o.diff.rgb += ShadeSH9(half4(worldNormal, 1));
+                //o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.uv.x += sin(_Time.y * o.uv.y) * 0.2;
                 UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }
@@ -52,7 +60,8 @@ Shader "Unlit/Wheat Shader"
             fixed4 frag (v2f i) : SV_Target
             {
                 fixed4 col = tex2D(_MainTex, i.uv);
-
+                col *= _Color * i.diff * 0.8;
+                
                 if (col.a < _AlphaCutOut)
                     discard;
                 

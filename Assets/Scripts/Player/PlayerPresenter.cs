@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Base;
 using Player.States;
 using UnityEngine;
+using WheatField.WheatCube;
 
 namespace Player
 {
@@ -23,6 +24,7 @@ namespace Player
             _model.CurrentState.OnEnter();
             _model.WheatDetected += OnWheatDetected;
             _model.WheatNotDetected += OnWheatNotDetected;
+            _view.CollidedWithCollectable += OnCollidedWithCollectable;
             return this as TPresenter;
         }
 
@@ -63,6 +65,11 @@ namespace Player
         private void OnWheatNotDetected()
         {
             _view.Animator.SetBool("Harvest", false);
+        }
+
+        private void OnCollidedWithCollectable(ICollectable collectable)
+        {
+            collectable.Collect(_view.Bag.position, _view.Bag);
         }
     }
 }
