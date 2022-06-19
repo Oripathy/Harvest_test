@@ -29,7 +29,6 @@ namespace InputHandler
             _joystick.SetActive(false);
             _camera = Camera.main.transform.GetChild(0).GetComponent<Camera>();
             GetComponent<Canvas>().worldCamera = _camera;
-            Debug.Log(_scale);
         }
 
         private void Update()

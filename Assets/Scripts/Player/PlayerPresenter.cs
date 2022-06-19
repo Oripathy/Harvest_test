@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using Barn;
 using Base;
 using Player.States;
 using UnityEngine;
@@ -25,6 +28,8 @@ namespace Player
             _model.WheatDetected += OnWheatDetected;
             _model.WheatNotDetected += OnWheatNotDetected;
             _view.CollidedWithCollectable += OnCollidedWithCollectable;
+            _view.EnteredSellZone += OnEnteredSellZone;
+            _view.ExitSellZone += OnExitSellZone;
             return this as TPresenter;
         }
 
@@ -69,7 +74,41 @@ namespace Player
 
         private void OnCollidedWithCollectable(ICollectable collectable)
         {
-            collectable.Collect(_view.Bag.position, _view.Bag);
+            if (!_model.IsStackFull())
+            {
+                var position = _view.Bag.localRotation * _model.AddCollectable(collectable);
+                collectable.Collect(position, _view.Bag);
+            }
+        }
+
+        private async void OnEnteredSellZone(BarnView barn)
+        {
+            if (_model.IsStackEmpty()) 
+                return;
+            
+            var position = barn.SellPoint;
+            var token = _model.CreateCancellationTokenSource().Token;
+            await SellCollectable(position, token);
+        }
+
+        private async Task SellCollectable(Vector3 position, CancellationToken token)
+        {
+            while (!_model.IsStackEmpty())
+            {
+                if (token.IsCancellationRequested)
+                {
+                    break;
+                }
+                
+                var collectable = _model.ReleaseCollectable();
+                collectable.Sell(position);
+                await Task.Delay(50);
+            }
+        }
+        
+        private void OnExitSellZone()
+        {
+            _model.Source.Cancel();
         }
     }
 }

@@ -6,7 +6,7 @@ namespace WheatField.WheatCube
 {
     public class WheatCubeModel : BaseModel
     {
-        private readonly float _rotationAngle = 0.1f;
+        private readonly float _rotationAngle = 0.01f;
         
         public Vector3 InitialScale { get; private set; }
         public Vector3 InBagScale { get; private set; }

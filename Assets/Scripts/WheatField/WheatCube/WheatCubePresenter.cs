@@ -1,4 +1,6 @@
 ﻿using System.Threading.Tasks;
+using Barn;
+using Barn.SellPoint;
 using Base;
 using UnityEngine;
 
@@ -11,6 +13,7 @@ namespace WheatField.WheatCube
             base.Init<TPresenter>(model, view, updateHandler);
             _model.IsAppeared += StartRotation;
             _view.CubeCollected += StartMovement;
+            _view.EnteredSellZone += StartMovingToSellZone;
             return this as TPresenter;
         }
         
@@ -33,7 +36,7 @@ namespace WheatField.WheatCube
         private async void StartMovement(Vector3 position, Transform bag)
         {
             _model.IsCollected = true;
-            _view.Collider.isTrigger = false;
+            _view.Collider.enabled = false;
             await MoveToBag(position, bag);
         }
 
@@ -41,17 +44,45 @@ namespace WheatField.WheatCube
         {
             var startTime = Time.time;
             _view.Transform.parent = bag;
-            var initialPosition = _view.Transform.position;
-            var initialRotation = _view.Transform.rotation;
+            var initialPosition = _view.Transform.localPosition;
+            var initialRotation = _view.Transform.localRotation;
 
             while (Time.time <= startTime + _model.MovementTime)
             {
-                _view.Transform.localPosition = Vector3.Lerp(initialPosition, bag.position,
+                _view.Transform.localPosition = Vector3.Lerp(initialPosition, position,
                     (Time.time - startTime) / _model.MovementTime);
-                _view.Transform.rotation = Quaternion.Lerp(initialRotation, bag.rotation,
+                _view.Transform.localRotation = Quaternion.Lerp(initialRotation, bag.localRotation,
+                (Time.time - startTime) / _model.MovementTime);
+                await Task.Yield();
+            }
+
+            _view.Transform.localPosition = position;
+            _view.Transform.localRotation = bag.transform.localRotation;
+        }
+
+        private async void StartMovingToSellZone(Vector3 position)
+        {
+            await MoveToSellPoint(position);
+        }
+
+        private async Task MoveToSellPoint(Vector3 position)
+        {
+            var initialPosition = _view.Transform.position;
+            var startTime = Time.time;
+
+            while (Time.time < startTime + _model.MovementTime)
+            {
+                _view.Transform.position = Vector3.Lerp(initialPosition, position,
                     (Time.time - startTime) / _model.MovementTime);
                 await Task.Yield();
             }
+            
+            _view.DestroyCube();
+        }
+
+        private void OnSold(SellPointView sellPoint)
+        {
+            
         }
     }
 }

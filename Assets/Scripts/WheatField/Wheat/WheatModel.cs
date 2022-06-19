@@ -1,4 +1,5 @@
-﻿using Base;
+﻿using System;
+using Base;
 using Factories;
 using UnityEngine;
 
@@ -14,6 +15,8 @@ namespace WheatField.Wheat
         public Vector3 GrownUpScale { get; private set; }
         public bool IsHarvested { get; set; }
 
+        public event Action<Vector3> WheatHarvested; 
+
         public WheatModel Init(WheatCubeFactory wheatCubeFactory)
         {
             _wheatCubeFactory = wheatCubeFactory;
@@ -21,6 +24,11 @@ namespace WheatField.Wheat
             GrownUpScale = new Vector3(1f, 1f, 1f);
             GrowUpTime = 10f;
             return this;
+        }
+
+        public void OnHarvested(Vector3 position)
+        {
+            WheatHarvested?.Invoke(position);
         }
     }
 }

@@ -52,7 +52,7 @@ Shader "Unlit/Wheat Shader"
                 o.diff = n * _LightColor0;
                 o.diff.rgb += ShadeSH9(half4(worldNormal, 1));
                 //o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.uv.x += sin(_Time.y * o.uv.y) * 0.2;
+                o.uv.x += (sin(_Time.y * o.uv.y * 0.5) + 0.5) * 0.5;
                 UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
             }

@@ -16,7 +16,7 @@ namespace WheatField.Wheat
        private async Task GrowUp()
        {
            var pos = _view.Transform.position + new Vector3(0f, 0.5f, 0f);
-           _model.WheatCubeFactory.CreateInstance(pos);
+           //_model.WheatCubeFactory.CreateInstance(pos);
             var startTime = Time.time;
             SetWheatActive(false);
             
@@ -27,36 +27,13 @@ namespace WheatField.Wheat
                 await Task.Yield();
             }
         }
-       
-       // private IEnumerator GrowUp()
-       // {
-       //     var startTime = Time.time;
-       //     SetWheatActive(false);
-       //      
-       //     while (Time.time <= startTime + _model.GrowUpTime)
-       //     {
-       //         _view.Transform.localScale = Vector3.Lerp(_model.InitialScale, _model.GrownUpScale,
-       //             (Time.time - startTime) / _model.GrowUpTime);
-       //         // var startPos = new Vector3(_view.Transform.position.x, _model.InitialScale.y / 2,
-       //         //     _view.Transform.position.z);
-       //         // var endPos = new Vector3(_view.Transform.position.x, _model.GrownUpScale.y / 2,
-       //         //     _view.Transform.position.z);
-       //         // _view.Transform.position = Vector3.Lerp(startPos, endPos, (Time.time - startTime) / _model.GrowUpTime);
-       //         yield return null;
-       //     }
-       // }
 
         private async void OnWheatHarvested()
         {
+            _model.OnHarvested(_view.Transform.position);
             await GrowUp();
             SetWheatActive(true);
         }
-
-        // private void OnWheatHarvested()
-        // {
-        //     _updateHandler.ExecuteCoroutine(GrowUp());
-        //     SetWheatActive(true);
-        // }
 
         private void SetWheatActive(bool isActive)
         {

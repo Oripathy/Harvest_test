@@ -1,4 +1,5 @@
 ﻿using System;
+using Barn;
 using Base;
 using UnityEngine;
 using WheatField.WheatCube;
@@ -13,5 +14,7 @@ namespace Player
         public Animator Animator { get; }
         
         public event Action<ICollectable> CollidedWithCollectable;
+        public event Action<BarnView> EnteredSellZone;
+        public event Action ExitSellZone;
     }
 }
