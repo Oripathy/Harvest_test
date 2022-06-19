@@ -41,6 +41,7 @@ namespace WheatField.WheatCube
                 if (other.TryGetComponent<SellPointView>(out var sellPoint))
                 {
                     Sold?.Invoke(sellPoint);
+                    Debug.Log(sellPoint);
                 }
             }
         }

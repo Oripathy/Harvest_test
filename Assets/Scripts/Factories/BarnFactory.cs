@@ -1,25 +1,24 @@
-﻿using Barn;
+﻿using System.Data;
+using Barn;
+using Barn.SellPoint;
 using Base;
 using UnityEngine;
 
 namespace Factories
 {
-    public class BarnFactory
+    public class BarnFactory : Factory<BarnModel, BarnView, IBarnView, BarnPresenter>
     {
-        private BarnView _barnPrefab;
-        private UpdateHandler _updateHandler;
-
-        public BarnFactory(BarnView barnPrefab, UpdateHandler updateHandler)
+        public BarnFactory(UpdateHandler updateHandler, BarnView barnPrefab) : base(updateHandler, barnPrefab)
         {
-            _barnPrefab = barnPrefab;
-            _updateHandler = updateHandler;
         }
 
-        public BarnModel CreateInstance(Vector3 position)
+        public override BarnModel CreateInstance(Vector3 position)
         {
-            var view = GameObject.Instantiate(_barnPrefab, position, Quaternion.identity);
+            var view = GameObject.Instantiate(_viewPrefab, position, Quaternion.identity);
             var model = new BarnModel();
             var presenter = new BarnPresenter().Init<BarnPresenter>(model, view, _updateHandler);
+            var sellPointView = view.SellP.GetComponent<SellPointView>();
+            var sellPointPresenter = new SellPointPresenter().Init<SellPointPresenter>(model, sellPointView, _updateHandler);
             return model;
         }
     }

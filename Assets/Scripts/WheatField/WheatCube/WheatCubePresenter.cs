@@ -14,6 +14,7 @@ namespace WheatField.WheatCube
             _model.IsAppeared += StartRotation;
             _view.CubeCollected += StartMovement;
             _view.EnteredSellZone += StartMovingToSellZone;
+            _view.Sold += OnSold;
             return this as TPresenter;
         }
         
@@ -53,16 +54,20 @@ namespace WheatField.WheatCube
                     (Time.time - startTime) / _model.MovementTime);
                 _view.Transform.localRotation = Quaternion.Lerp(initialRotation, bag.localRotation,
                 (Time.time - startTime) / _model.MovementTime);
+                _view.Transform.localScale = Vector3.Lerp(_model.InitialScale, _model.InBagScale,
+                    (Time.time - startTime) / _model.MovementTime);
                 await Task.Yield();
             }
 
             _view.Transform.localPosition = position;
             _view.Transform.localRotation = bag.transform.localRotation;
+            _view.Transform.localScale = _model.InBagScale;
         }
 
         private async void StartMovingToSellZone(Vector3 position)
         {
             await MoveToSellPoint(position);
+            _view.DestroyCube();
         }
 
         private async Task MoveToSellPoint(Vector3 position)
@@ -76,13 +81,15 @@ namespace WheatField.WheatCube
                     (Time.time - startTime) / _model.MovementTime);
                 await Task.Yield();
             }
-            
-            _view.DestroyCube();
+
+            _view.Transform.position = position;
+            _view.Collider.enabled = true;
+            await Task.Delay(50);
         }
 
         private void OnSold(SellPointView sellPoint)
         {
-            
+            sellPoint.OnCubeSold();
         }
     }
 }

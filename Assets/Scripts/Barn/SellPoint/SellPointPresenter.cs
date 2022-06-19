@@ -7,7 +7,7 @@ namespace Barn.SellPoint
         public override TPresenter Init<TPresenter>(BarnModel model, ISellPointView view, UpdateHandler updateHandler)
         {
             base.Init<TPresenter>(model, view, updateHandler);
-
+            _view.CubeSold += OnCubeSold;
             return this as TPresenter;
         }
 

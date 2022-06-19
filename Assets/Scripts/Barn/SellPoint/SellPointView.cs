@@ -12,6 +12,7 @@ namespace Barn.SellPoint
         public void OnCubeSold()
         {
             CubeSold?.Invoke();
+            Debug.Log("Sold");
         }
     }
 }

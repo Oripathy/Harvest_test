@@ -1,6 +1,5 @@
 ﻿using System;
 using Base;
-using Coins;
 using UnityEngine;
 
 namespace Barn

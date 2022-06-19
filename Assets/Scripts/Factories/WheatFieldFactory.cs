@@ -29,16 +29,15 @@ namespace Factories
             var presenter = new WheatFieldPresenter().Init<WheatFieldPresenter>(model, view, _updateHandler);
             
             var wheat = new List<List<WheatModel>>();
-            // var wheatPosition = new Vector3(4f, 0.5f, 4f);
-            var wheatPosition = new Vector3(5f, 0f, 5f);
+            var wheatPosition = new Vector3(4f, 0f, 4f);
             var step = 0.5f;
 
-            for (var i = 0; i < model._fieldSize[0] / step; i++)
+            for (var i = 0; i < model._fieldSize[0] / step - 1; i++)
             {
-                wheatPosition.z = 5f;
+                wheatPosition.z = 4f;
                 wheat.Add(new List<WheatModel>());
                 
-                for (var j = 0; j < model._fieldSize[1] / step; j++)
+                for (var j = 0; j < model._fieldSize[1] / step - 1; j++)
                 {
                     wheat[i].Add(_wheatFactory.CreateInstance(wheatPosition, view.transform));
                     wheatPosition.z -= step;

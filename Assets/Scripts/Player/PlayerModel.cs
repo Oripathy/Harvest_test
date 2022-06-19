@@ -48,7 +48,7 @@ namespace Player
             };
         }
 
-        public void Init()
+        public override void Init()
         {
             CollectablesAmountChanged?.Invoke(_collectables.Count, _maxCollectablesAmount);
             OnWheatNotDetected();

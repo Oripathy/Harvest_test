@@ -1,26 +1,23 @@
 ﻿using Base;
-using Coins;
+using CoinUI.Coin;
 using UnityEngine;
 
 namespace Factories
 {
-    public class CoinFactory
+    public class CoinFactory : Factory<CoinModel, CoinView, ICoinView, CoinPresenter>
     {
-        private CoinView _coinPrefab;
-        private CoinUIModel _coinsModel;
-        private UpdateHandler _updateHandler;
-
-        public CoinFactory(CoinView coinPrefab, UpdateHandler updateHandler, CoinUIModel coinsModel)
+        public CoinFactory(UpdateHandler updateHandler, CoinView viewPrefab) : base(updateHandler, viewPrefab)
         {
-            _coinPrefab = coinPrefab;
-            _updateHandler = updateHandler;
-            _coinsModel = coinsModel;
         }
 
-        public void CreateInstance(Vector3 position)
+        public CoinModel CreateInstance(Vector3 position, Transform parent)
         {
-            var view = GameObject.Instantiate(_coinPrefab, position, Quaternion.identity);
-            var presenter = new CoinPresenter().Init<CoinPresenter>(_coinsModel, view, _updateHandler);
+            var view = GameObject.Instantiate(_viewPrefab, parent, false);
+            view.RectTransform.anchoredPosition = position;
+            var model = new CoinModel();
+            var presenter = new CoinPresenter().Init<CoinPresenter>(model, view, _updateHandler);
+            model.Init();
+            return model;
         }
     }
 }

@@ -12,7 +12,7 @@ Material:
   m_ShaderKeywords: EFFECT_HUE_VARIATION GEOM_TYPE_LEAF _BEND_ON _WIGGLE_ON _WIND_ON
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 1
-  m_DoubleSidedGI: 0
+  m_DoubleSidedGI: 1
   m_CustomRenderQueue: -1
   stringTagMap: {}
   disabledShaderPasses: []
@@ -92,7 +92,7 @@ Material:
     - WindSpeedFloat: 0.1
     - WindStrenghtFloat: 0.8
     - WindTurbulenceFloat: 0.4
-    - _AlphaCutOut: 0.06
+    - _AlphaCutOut: 0.02
     - _AlphaCutoff: 0.5
     - _Bend: 1
     - _BendStrenght: 1

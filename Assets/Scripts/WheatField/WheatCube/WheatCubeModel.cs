@@ -16,7 +16,7 @@ namespace WheatField.WheatCube
 
         public event Action IsAppeared;
 
-        public void Init()
+        public override void Init()
         {
             IsAppeared?.Invoke();
         }
@@ -24,8 +24,8 @@ namespace WheatField.WheatCube
         public WheatCubeModel()
         {
             MovementTime = 0.5f;
-            InitialScale = new Vector3(0.3f, 0.15f, 0.15f);
-            InBagScale = new Vector3(0.1f, 0.05f, 0.05f);
+            InitialScale = new Vector3(0.6f, 0.3f, 0.3f);
+            InBagScale = new Vector3(0.3f, 0.15f, 0.15f);
             Rotation = new Quaternion(0f, (float) Math.Sin(_rotationAngle / 2), 0f,
                 (float) Math.Cos(_rotationAngle / 2));
         }

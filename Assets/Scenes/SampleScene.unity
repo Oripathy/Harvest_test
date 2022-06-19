@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -160,6 +160,8 @@ MonoBehaviour:
   _wheatCubeView: {fileID: 4748553145319769138, guid: 48044ccd25e6ebd4695af1852fae07ab, type: 3}
   _barnView: {fileID: 7395520184301625310, guid: 040902c21b8e6254d80e3c956be72dfe, type: 3}
   _inputHandlerView: {fileID: 7967744018133173482, guid: d47ca77047776184fbab77855b1c321c, type: 3}
+  _coinView: {fileID: 8783088439606286405, guid: 62b72a0f8aa9ddb4097b3b0b8e9aaed8, type: 3}
+  _coinUIView: {fileID: 3061521944558554134, guid: 539573913706f2649ac8db3d9d8eb5bb, type: 3}
 --- !u!4 &639657464
 Transform:
   m_ObjectHideFlags: 0

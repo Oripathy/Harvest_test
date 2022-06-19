@@ -14,7 +14,7 @@ namespace WheatField
         private WheatCubeFactory _wheatCubeFactory;
         private int _wheatHarvestedAmount;
         
-        public readonly float[] _fieldSize = { 10f, 10f };
+        public readonly float[] _fieldSize = { 9f, 9f };
 
         public WheatFieldModel(WheatCubeFactory wheatCubeFactory)
         {
@@ -32,7 +32,7 @@ namespace WheatField
 
             if (_wheatHarvestedAmount >= 10)
             {
-                CreateWheatCube(position);
+                CreateWheatCube(position + new Vector3(0f, 0.3f, 0f));
                 _wheatHarvestedAmount = 0;
             }
         }

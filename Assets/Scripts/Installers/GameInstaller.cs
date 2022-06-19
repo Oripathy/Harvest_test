@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Barn;
 using Base;
+using CoinUI;
+using CoinUI.Coin;
 using Factories;
 using InputHandler;
 using Player;
@@ -22,6 +24,8 @@ namespace Installers
         [SerializeField] private WheatCubeView _wheatCubeView;
         [SerializeField] private BarnView _barnView;
         [SerializeField] private InputHandlerView _inputHandlerView;
+        [SerializeField] private CoinView _coinView;
+        [SerializeField] private CoinUIView _coinUIView;
 
         private void Awake()
         {
@@ -30,13 +34,16 @@ namespace Installers
             var player = playerFactory.CreateInstance(new Vector3(0f, 0f, -6f));
             var inputFactory = new InputHandlerFactory(_inputHandlerView, _updateHandler);
             inputFactory.CreateInstance(player);
-            var wheatCubeFactory = new WheatCubeFactory(_wheatCubeView, _updateHandler);
+            var wheatCubeFactory = new WheatCubeFactory(_updateHandler, _wheatCubeView);
             var wheatFactory = new WheatFactory(_updateHandler, _wheatView, wheatCubeFactory);
             var wheatFieldFactory = new WheatFieldFactory(_updateHandler, _wheatFieldView, wheatFactory, wheatCubeFactory);
             wheatFieldFactory.CreateInstance(new Vector3(4f, 0.01f, -4f));
             wheatFieldFactory.CreateInstance(new Vector3(4f, 0.01f, 3f));
-            var barnFactory = new BarnFactory(_barnView, _updateHandler);
-            barnFactory.CreateInstance(new Vector3(-5f, 0f, -4.45f));
+            var barnFactory = new BarnFactory(_updateHandler, _barnView);
+            var barnModel = barnFactory.CreateInstance(new Vector3(-5f, 0f, -4.45f));
+            var coinFactory = new CoinFactory(_updateHandler, _coinView);
+            var coinUIFactory = new CoinUIFactory(barnModel, coinFactory, _coinUIView, _updateHandler);
+            coinUIFactory.CreateInstance();
         }
     }
 }
