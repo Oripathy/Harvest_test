@@ -1,5 +1,4 @@
 ﻿using System;
-using Barn;
 using Barn.SellPoint;
 using UnityEngine;
 
@@ -17,6 +16,7 @@ namespace WheatField.WheatCube
         public event Action<Vector3, Transform> CubeCollected;
         public event Action<Vector3> EnteredSellZone;
         public event Action<SellPointView> Sold;
+        public event Action ObjectDestroyed;
 
         public void Collect(Vector3 position, Transform bag)
         {
@@ -29,9 +29,9 @@ namespace WheatField.WheatCube
             EnteredSellZone?.Invoke(position);
         }
 
-        public void DestroyCube()
+        public void SetCubeActive(bool isActive)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(isActive);
         }
 
         public void OnTriggerEnter(Collider other)
@@ -41,9 +41,13 @@ namespace WheatField.WheatCube
                 if (other.TryGetComponent<SellPointView>(out var sellPoint))
                 {
                     Sold?.Invoke(sellPoint);
-                    Debug.Log(sellPoint);
                 }
             }
+        }
+        
+        private void OnDestroy()
+        {
+            ObjectDestroyed?.Invoke();
         }
     }
 }

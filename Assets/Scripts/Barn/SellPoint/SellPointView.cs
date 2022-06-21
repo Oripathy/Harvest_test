@@ -8,11 +8,16 @@ namespace Barn.SellPoint
         public Transform Transform => transform;
         
         public event Action CubeSold;
+        public event Action ObjectDestroyed;
 
         public void OnCubeSold()
         {
             CubeSold?.Invoke();
-            Debug.Log("Sold");
+        }
+
+        private void OnDestroy()
+        {
+            ObjectDestroyed?.Invoke();
         }
     }
 }

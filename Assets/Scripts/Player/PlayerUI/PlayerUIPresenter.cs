@@ -15,5 +15,11 @@ namespace Player.PlayerUI
         {
             _view.UpdateCollectableAmount(collectablesAmount, maxCollectablesAmount);
         }
+
+        public override void Dispose()
+        {
+            _model.CollectablesAmountChanged -= OnCollectablesAmountChanged;
+            base.Dispose();
+        }
     }
 }

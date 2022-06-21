@@ -1,6 +1,4 @@
 ﻿using Base;
-using TMPro;
-using UnityEngine;
 
 namespace Player.PlayerUI
 {

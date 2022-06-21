@@ -1,5 +1,4 @@
 ﻿using Base;
-using UnityEngine;
 
 namespace Player.WheatDetector
 {
@@ -21,6 +20,13 @@ namespace Player.WheatDetector
         private void OnWheatNotDetected()
         {
             _model.OnWheatNotDetected();
+        }
+
+        public override void Dispose()
+        {
+            _view.WheatDetected -= OnWheatDetected;
+            _view.WheatNotDetected -= OnWheatNotDetected;
+            base.Dispose();
         }
     }
 }

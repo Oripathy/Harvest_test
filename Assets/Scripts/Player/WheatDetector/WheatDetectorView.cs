@@ -1,6 +1,5 @@
 ﻿using System;
 using UnityEngine;
-using WheatField.Wheat;
 
 namespace Player.WheatDetector
 {
@@ -10,16 +9,14 @@ namespace Player.WheatDetector
         [SerializeField] private LayerMask _wheatLayer;
         
         private readonly float _detectionRadius = 0.3f;
-        private Collider[] _colliderHit = new Collider[2];
         private bool _isWheatDetected;
         
         public event Action WheatDetected;
         public event Action WheatNotDetected;
+        public event Action ObjectDestroyed;
 
         private void Update()
         {
-            //Physics.OverlapSphereNonAlloc(_detectionPoint.position, _detectionRadius, _colliderHit, _wheatLayer);
-
             var colliders = Physics.OverlapSphere(_detectionPoint.position, _detectionRadius, _wheatLayer);
             
             if (colliders.Length != 0 && !_isWheatDetected)
@@ -32,6 +29,11 @@ namespace Player.WheatDetector
                 WheatNotDetected?.Invoke();
                 _isWheatDetected = false;
             }
+        }
+        
+        private void OnDestroy()
+        {
+            ObjectDestroyed?.Invoke();
         }
     }
 }

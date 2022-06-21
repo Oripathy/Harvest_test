@@ -15,5 +15,11 @@ namespace Barn.SellPoint
         {
             _model.OnCubeSold(_view.Transform.position);
         }
+
+        public override void Dispose()
+        {
+            _view.CubeSold -= OnCubeSold;
+            base.Dispose();
+        }
     }
 }

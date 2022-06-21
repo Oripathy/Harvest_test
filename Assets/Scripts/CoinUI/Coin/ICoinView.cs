@@ -7,6 +7,6 @@ namespace CoinUI.Coin
     {
         public RectTransform RectTransform { get; }
 
-        public void DestroyCoin();
+        public void SetCoinActive(bool isActive);
     }
 }

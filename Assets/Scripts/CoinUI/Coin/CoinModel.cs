@@ -1,29 +1,51 @@
 ﻿using System;
 using Base;
+using ObjectPools;
 using UnityEngine;
 
 namespace CoinUI.Coin
 {
-    public class CoinModel : BaseModel
+    public class CoinModel : BaseModel, IObjectToPool
     {
-         public float MovementTime { get; }
+        private RectTransform _destinationPosition;
+        
+        public float MovementTime { get; }
 
-        public event Action<Vector3, float> CoinSpawned;
-        public event Action<CoinModel> CoinReachedDestination;
+        public event Action<RectTransform> CoinSpawned;
+        public event Action<Vector3> CoinPlaced;
+        public event Action<IObjectToPool> ObjectShouldBeReturned;
+        public event Action<bool> ActiveStateChanged;
 
         public CoinModel()
         {
             MovementTime = 0.5f;
         }
 
-        public void OnCoinSpawned(Vector3 coinUIPosition, float scaleFactor)
+        private void OnCoinSpawned(RectTransform coinUIPosition)
         {
-            CoinSpawned?.Invoke(coinUIPosition, scaleFactor);
+            CoinSpawned?.Invoke(coinUIPosition);
+        }
+
+        public void SetDestinationPosition(RectTransform position)
+        {
+            _destinationPosition = position;
         }
 
         public void OnCoinReachedDestination()
         {
-            CoinReachedDestination?.Invoke(this);
+            ObjectShouldBeReturned?.Invoke(this);
+        }
+
+        public IObjectToPool SetActive(bool isActive)
+        {
+            ActiveStateChanged?.Invoke(isActive);
+            return this;
+        }
+
+        public void SetPosition(Vector3 position)
+        {
+            CoinPlaced?.Invoke(position);
+            OnCoinSpawned(_destinationPosition);
         }
     }
 }

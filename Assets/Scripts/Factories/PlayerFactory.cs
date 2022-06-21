@@ -9,33 +9,35 @@ namespace Factories
 {
     public class PlayerFactory
     {
-        private PlayerView _playerPrefab;
-        private UpdateHandler _updateHandler;
+        private readonly PlayerView _playerPrefab;
+        private readonly UpdateHandler _updateHandler;
+        private readonly PlayerUIView _playerUIView;
+        private readonly Camera _uiCamera;
         private ScytheView _scytheView;
         private WheatDetectorView _detectorView;
-        private PlayerUIView _playerUIView;
 
-        public PlayerFactory(PlayerView playerPrefab, UpdateHandler updateHandler, PlayerUIView playerUIView)
+        public PlayerFactory(PlayerView playerPrefab, UpdateHandler updateHandler, PlayerUIView playerUIView, Camera uiCamera)
         {
             _playerPrefab = playerPrefab;
             _updateHandler = updateHandler;
             _playerUIView = playerUIView;
+            _uiCamera = uiCamera;
         }
 
         public PlayerModel CreateInstance(Vector3 initialPosition)
         {
-            var view = GameObject.Instantiate(_playerPrefab, initialPosition, Quaternion.identity);
+            var view = Object.Instantiate(_playerPrefab, initialPosition, Quaternion.identity);
             _scytheView = view.gameObject.GetComponentInChildren<ScytheView>();
             _detectorView = view.gameObject.GetComponentInChildren<WheatDetectorView>();
-            var playerUIView = GameObject.Instantiate(_playerUIView);
+            var playerUIView = Object.Instantiate(_playerUIView).Init(_uiCamera);
             
             var scytheModel = new ScytheModel();
             var model = new PlayerModel(scytheModel);
 
-            var scythePresenter = new ScythePresenter().Init<ScythePresenter>(scytheModel, _scytheView, _updateHandler);
-            var presenter = new PlayerPresenter().Init<PlayerPresenter>(model, view, _updateHandler);
-            var detectorPresenter = new WheatDetectorPresenter().Init<WheatDetectorPresenter>(model, _detectorView, _updateHandler);
-            var playerUIPresenter = new PlayerUIPresenter().Init<PlayerUIPresenter>(model, playerUIView, _updateHandler);
+            new ScythePresenter().Init<ScythePresenter>(scytheModel, _scytheView, _updateHandler);
+            new PlayerPresenter().Init<PlayerPresenter>(model, view, _updateHandler);
+            new WheatDetectorPresenter().Init<WheatDetectorPresenter>(model, _detectorView, _updateHandler);
+            new PlayerUIPresenter().Init<PlayerUIPresenter>(model, playerUIView, _updateHandler);
             
             model.Init();
             return model;

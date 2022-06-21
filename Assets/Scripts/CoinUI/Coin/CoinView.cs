@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace CoinUI.Coin
@@ -7,9 +8,17 @@ namespace CoinUI.Coin
     {
         [SerializeField] private Image _coinImage;
         public RectTransform RectTransform => _coinImage.rectTransform;
-        public void DestroyCoin()
+
+        public event Action ObjectDestroyed;
+        
+        public void SetCoinActive(bool isActive)
         {
-            Destroy(gameObject);
+            gameObject.SetActive(isActive);
+        }
+        
+        private void OnDestroy()
+        {
+            ObjectDestroyed?.Invoke();
         }
     }
 }

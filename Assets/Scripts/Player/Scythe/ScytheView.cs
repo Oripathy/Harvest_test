@@ -7,6 +7,7 @@ namespace Player.Scythe
     public class ScytheView : MonoBehaviour, IScytheView
     {
         public event Action<IHarvestable> WheatHarvested;
+        public event Action ObjectDestroyed;
      
         public void SetScytheActive(bool isActive)
         {
@@ -19,6 +20,11 @@ namespace Player.Scythe
             {
                 WheatHarvested?.Invoke(harvestable);
             }
+        }
+        
+        private void OnDestroy()
+        {
+            ObjectDestroyed?.Invoke();
         }
     }
 }

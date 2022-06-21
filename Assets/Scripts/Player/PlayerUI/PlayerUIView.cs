@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 
 namespace Player.PlayerUI
@@ -6,18 +7,27 @@ namespace Player.PlayerUI
     public class PlayerUIView : MonoBehaviour, IPlayerUIView
     { 
         [SerializeField] private TMP_Text _collectablesAmountText;
+        [SerializeField] private Canvas _canvas;
 
-        private Camera _camera;
+        private Camera _uiCamera;
 
-        private void Awake()
+        public event Action ObjectDestroyed;
+
+        public PlayerUIView Init(Camera uiCamera)
         {
-            _camera = Camera.main.transform.GetChild(0).GetComponent<Camera>();
-            GetComponent<Canvas>().worldCamera = _camera;
+            _uiCamera = uiCamera;
+            _canvas.worldCamera = _uiCamera;
+            return this;
         }
 
         public void UpdateCollectableAmount(int collectablesAmount, int maxCollectablesAmount)
         {
             _collectablesAmountText.text = collectablesAmount + " / " + maxCollectablesAmount;
+        }
+        
+        private void OnDestroy()
+        {
+            ObjectDestroyed?.Invoke();
         }
     }
 }

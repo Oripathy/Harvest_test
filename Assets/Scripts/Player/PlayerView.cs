@@ -2,7 +2,6 @@
 using Barn;
 using UnityEngine;
 using WheatField.WheatCube;
-using Vector3 = System.Numerics.Vector3;
 
 namespace Player
 {
@@ -21,6 +20,7 @@ namespace Player
         public event Action<ICollectable> CollidedWithCollectable;
         public event Action<BarnView> EnteredSellZone;
         public event Action ExitSellZone;
+        public event Action ObjectDestroyed;
 
         private void OnTriggerEnter(Collider other)
         {
@@ -41,6 +41,11 @@ namespace Player
             {
                 ExitSellZone?.Invoke();
             }
+        }
+        
+        private void OnDestroy()
+        {
+            ObjectDestroyed?.Invoke();
         }
     }
 }

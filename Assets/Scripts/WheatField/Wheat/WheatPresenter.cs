@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Base;
 using UnityEngine;
 
@@ -13,34 +14,43 @@ namespace WheatField.Wheat
             return this as TPresenter;
         }
 
-       private async Task GrowUp()
-       {
-           var pos = _view.Transform.position + new Vector3(0f, 0.5f, 0f);
-           //_model.WheatCubeFactory.CreateInstance(pos);
+        private async Task GrowUp(CancellationToken token)
+        {
             var startTime = Time.time;
             SetWheatActive(false);
-            
-            while (Time.time <= startTime + _model.GrowUpTime)
+
+            while (Time.time <= startTime + _model?.GrowUpTime)
             {
+                if (token.IsCancellationRequested)
+                {
+                    return;
+                }
+
                 _view.Transform.localScale = Vector3.Lerp(_model.InitialScale, _model.GrownUpScale,
                     (Time.time - startTime) / _model.GrowUpTime);
                 await Task.Yield();
             }
+
+            SetWheatActive(true);
         }
 
         private async void OnWheatHarvested()
         {
+            var token = _model.CreateCancellationTokenSource().Token;
             _model.OnHarvested(_view.Transform.position);
-            await GrowUp();
-            SetWheatActive(true);
+            await GrowUp(token);
         }
 
         private void SetWheatActive(bool isActive)
         {
-            _view.Collider.enabled = isActive;
-            // _view.GrownUpWheat.SetActive(isActive);
-            // _view.WheatLowerPart.SetActive(!isActive);
-            // _view.WheatUpperPart.SetActive(!isActive);
+            if (_view != null)
+                _view.Collider.enabled = isActive;
+        }
+
+        public override void Dispose()
+        {
+            _view.WheatHarvested -= OnWheatHarvested;
+            base.Dispose();
         }
     }
 }

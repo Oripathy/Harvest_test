@@ -1,5 +1,4 @@
 ﻿using System;
-using Barn;
 using Barn.SellPoint;
 using Base;
 using UnityEngine;
@@ -15,6 +14,6 @@ namespace WheatField.WheatCube
         public event Action<Vector3> EnteredSellZone;
         public event Action<SellPointView> Sold;
 
-        public void DestroyCube();
+        public void SetCubeActive(bool isActive);
     }
 }

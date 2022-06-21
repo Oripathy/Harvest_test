@@ -9,13 +9,14 @@ namespace Factories
         public CoinFactory(UpdateHandler updateHandler, CoinView viewPrefab) : base(updateHandler, viewPrefab)
         {
         }
-
-        public CoinModel CreateInstance(Vector3 position, Transform parent)
+        
+        public override CoinModel CreateInstance(Transform parent, RectTransform destinationPosition)
         {
-            var view = GameObject.Instantiate(_viewPrefab, parent, false);
-            view.RectTransform.anchoredPosition = position;
+            var view = Object.Instantiate(_viewPrefab, parent, false);
             var model = new CoinModel();
-            var presenter = new CoinPresenter().Init<CoinPresenter>(model, view, _updateHandler);
+            view.gameObject.SetActive(false);
+            model.SetDestinationPosition(destinationPosition);
+            new CoinPresenter().Init<CoinPresenter>(model, view, _updateHandler);
             model.Init();
             return model;
         }

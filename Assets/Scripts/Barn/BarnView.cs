@@ -11,10 +11,17 @@ namespace Barn
         public Vector3 SellPoint => _sellPoint.transform.position;
         public SellPointView SellP => _sellPoint;
 
+        public event Action ObjectDestroyed;
+
         private void Awake()
         {
             transform.rotation *= new Quaternion(0f, (float)Math.Sin(270 * Math.PI / 180 / 2), 0f,
                 (float)Math.Cos(270 * Math.PI / 180 / 2));
+        }
+        
+        private void OnDestroy()
+        {
+            ObjectDestroyed?.Invoke();
         }
     }
 }

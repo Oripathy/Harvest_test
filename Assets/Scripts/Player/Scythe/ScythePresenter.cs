@@ -22,5 +22,12 @@ namespace Player.Scythe
         {
             _view.SetScytheActive(isActive);
         }
+
+        public override void Dispose()
+        {
+            _view.WheatHarvested -= OnWheatHarvested;
+            _model.IsActiveChanged -= OnIsActiveChanged;
+            base.Dispose();
+        }
     }
 }

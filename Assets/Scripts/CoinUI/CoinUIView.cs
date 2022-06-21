@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using System;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,27 +7,36 @@ namespace CoinUI
 {
     public class CoinUIView : MonoBehaviour, ICoinUIView
     {
-        [SerializeField] private Transform _coinsUIPosition;
+        [SerializeField] private Image _coinsUIImage;
+        [SerializeField] private Image _coinUIPanel;
         [SerializeField] private TMP_Text _coinsAmountText;
         [SerializeField] private Canvas _canvas;
 
-        private Image _coinsUIImage; 
-        private Camera _camera;
+        private Camera _uiCamera;
         
         public RectTransform CoinsUIPosition => _coinsUIImage.rectTransform;
+        public RectTransform CoinUIPanel => _coinUIPanel.rectTransform;
         public Transform Transform => transform;
         public Canvas Canvas => _canvas;
+        public Camera Camera => _uiCamera;
 
-        private void Awake()
+        public event Action ObjectDestroyed;
+
+        public CoinUIView Init(Camera uiCamera)
         {
-            _coinsUIImage = _coinsUIPosition.GetComponent<Image>();
-            _camera = Camera.main.transform.GetChild(0).GetComponent<Camera>();
-            GetComponent<Canvas>().worldCamera = _camera;
+            _uiCamera = uiCamera;
+            _canvas.worldCamera = _uiCamera;
+            return this;
         }
-
+        
         public void UpdateCoinsAmount(int coinsAmount)
         {
             _coinsAmountText.text = coinsAmount.ToString();
+        }
+        
+        private void OnDestroy()
+        {
+            ObjectDestroyed?.Invoke();
         }
     }
 }

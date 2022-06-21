@@ -13,6 +13,7 @@ namespace Player
     public class PlayerPresenter : BasePresenter<PlayerModel, IPlayerView>
     {
         private Dictionary<Type, BaseState> _statesToType;
+        private static readonly int Harvest = Animator.StringToHash("Harvest");
 
         public override TPresenter Init<TPresenter>(PlayerModel model, IPlayerView view, UpdateHandler updateHandler)
         {
@@ -64,12 +65,12 @@ namespace Player
 
         private void OnWheatDetected()
         {
-            _view.Animator.SetBool("Harvest", true);
+            _view.Animator.SetBool(Harvest, true);
         }
 
         private void OnWheatNotDetected()
         {
-            _view.Animator.SetBool("Harvest", false);
+            _view.Animator.SetBool(Harvest, false);
         }
 
         private void OnCollidedWithCollectable(ICollectable collectable)
@@ -97,18 +98,31 @@ namespace Player
             {
                 if (token.IsCancellationRequested)
                 {
-                    break;
+                    return;
                 }
                 
                 var collectable = _model.ReleaseCollectable();
                 collectable.Sell(position);
-                await Task.Delay(50);
+                await Task.Delay(50, token);
             }
         }
         
         private void OnExitSellZone()
         {
-            _model.Source.Cancel();
+            if (_model.IsStackEmpty())
+                return;
+            
+            _model.DisposeSource();
+        }
+
+        public override void Dispose()
+        {
+            _model.WheatDetected -= OnWheatDetected;
+            _model.WheatNotDetected -= OnWheatNotDetected;
+            _view.CollidedWithCollectable -= OnCollidedWithCollectable;
+            _view.EnteredSellZone -= OnEnteredSellZone;
+            _view.ExitSellZone -= OnExitSellZone;
+            base.Dispose();
         }
     }
 }

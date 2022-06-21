@@ -5,9 +5,9 @@ namespace CoinUI
 {
     public interface ICoinUIView : IBaseView
     {
-        public RectTransform CoinsUIPosition { get; }
-        public Transform Transform { get; }
+        public RectTransform CoinUIPanel { get;}
         public Canvas Canvas { get; }
+        public Camera Camera { get; }
 
         public void UpdateCoinsAmount(int coinsAmount);
     }

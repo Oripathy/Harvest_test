@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Base;
-using Factories;
+using ObjectPools;
 using UnityEngine;
 using WheatField.Wheat;
+using WheatField.WheatCube;
 
 
 namespace WheatField
@@ -11,30 +12,33 @@ namespace WheatField
     public class WheatFieldModel : BaseModel
     {
         private List<List<WheatModel>> _wheat;
-        private WheatCubeFactory _wheatCubeFactory;
+        private readonly ObjectPool<WheatCubeModel, WheatCubeView, IWheatCubeView, WheatCubePresenter> _wheatCubePool;
         private int _wheatHarvestedAmount;
         
-        public readonly float[] _fieldSize = { 9f, 9f };
+        public readonly float[] FieldSize = { 9f, 9f };
 
-        public WheatFieldModel(WheatCubeFactory wheatCubeFactory)
+        public WheatFieldModel(ObjectPool<WheatCubeModel, WheatCubeView, IWheatCubeView, WheatCubePresenter> wheatCubePool)
         {
-            _wheatCubeFactory = wheatCubeFactory;
+            _wheatCubePool = wheatCubePool;
         }
 
-        public void CreateWheatCube(Vector3 position)
+        private void CreateWheatCube(Vector3 position)
         {
-            _wheatCubeFactory.CreateInstance(position);
+            if (_wheatCubePool.TryReleaseObject(position, out var cube))
+            {
+                cube.ObjectShouldBeReturned += ReturnWheatCubeToPool;
+            }
         }
 
         private void OnWheatHarvested(Vector3 position)
         {
             _wheatHarvestedAmount++;
 
-            if (_wheatHarvestedAmount >= 10)
-            {
-                CreateWheatCube(position + new Vector3(0f, 0.3f, 0f));
-                _wheatHarvestedAmount = 0;
-            }
+            if (_wheatHarvestedAmount < 10) 
+                return;
+            
+            CreateWheatCube(position + new Vector3(0f, 0.3f, 0f));
+            _wheatHarvestedAmount = 0;
         }
 
         public void SetWheat(List<List<WheatModel>> wheat)
@@ -45,6 +49,12 @@ namespace WheatField
             {
                 obj.WheatHarvested += OnWheatHarvested;
             }
+        }
+
+        private void ReturnWheatCubeToPool(IObjectToPool wheatCube)
+        {
+            _wheatCubePool.ReturnToPool(wheatCube);
+            wheatCube.ObjectShouldBeReturned -= ReturnWheatCubeToPool;
         }
     }
 }

@@ -1,25 +1,27 @@
 ﻿using Base;
-using InputHandler;
 using Player;
+using Player.InputHandler;
 using UnityEngine;
 
 namespace Factories
 {
     public class InputHandlerFactory
     {
-        private InputHandlerView _viewPrefab;
-        private UpdateHandler _updateHandler;
+        private readonly InputHandlerView _viewPrefab;
+        private readonly UpdateHandler _updateHandler;
+        private readonly Camera _uiCamera;
 
-        public InputHandlerFactory(InputHandlerView viewPrefab, UpdateHandler updateHandler)
+        public InputHandlerFactory(InputHandlerView viewPrefab, UpdateHandler updateHandler, Camera uiCamera)
         {
             _viewPrefab = viewPrefab;
             _updateHandler = updateHandler;
+            _uiCamera = uiCamera;
         }
 
         public void CreateInstance(PlayerModel model)
         {
-            var view = GameObject.Instantiate(_viewPrefab);
-            var presenter = new InputHandlerPresenter().Init<InputHandlerPresenter>(model, view, _updateHandler);
+            var view = Object.Instantiate(_viewPrefab).Init(_uiCamera);
+            new InputHandlerPresenter().Init<InputHandlerPresenter>(model, view, _updateHandler);
         }
     }
 }
