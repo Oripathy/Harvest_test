@@ -88,7 +88,7 @@ namespace Player
                 return;
             
             var position = barn.SellPoint;
-            var token = _model.CreateCancellationTokenSource().Token;
+            var token = _model.Source?.Token ?? _model.CreateCancellationTokenSource().Token;
             await SellCollectable(position, token);
         }
 
@@ -103,7 +103,7 @@ namespace Player
                 
                 var collectable = _model.ReleaseCollectable();
                 collectable.Sell(position);
-                await Task.Delay(50, token);
+                await Task.Delay(50);
             }
         }
         
@@ -112,6 +112,7 @@ namespace Player
             if (_model.IsStackEmpty())
                 return;
             
+            _model.Source?.Cancel();
             _model.DisposeSource();
         }
 

@@ -6,7 +6,6 @@ using UnityEngine;
 using WheatField.Wheat;
 using WheatField.WheatCube;
 
-
 namespace WheatField
 {
     public class WheatFieldModel : BaseModel
@@ -15,7 +14,7 @@ namespace WheatField
         private readonly ObjectPool<WheatCubeModel, WheatCubeView, IWheatCubeView, WheatCubePresenter> _wheatCubePool;
         private int _wheatHarvestedAmount;
         
-        public readonly float[] FieldSize = { 9f, 9f };
+        public readonly float[] FieldSize = { 8.5f, 8.5f };
 
         public WheatFieldModel(ObjectPool<WheatCubeModel, WheatCubeView, IWheatCubeView, WheatCubePresenter> wheatCubePool)
         {

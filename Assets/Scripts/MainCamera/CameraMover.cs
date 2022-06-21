@@ -7,7 +7,7 @@ namespace MainCamera
     public class CameraMover : MonoBehaviour
     {
         private const double RotationAngle = 50 * Math.PI / 180;
-        private readonly Vector3 _offset = new Vector3(0f, 7f, -7f);
+        private readonly Vector3 _offset = new Vector3(0f, 10f, -8f);
         private PlayerView _player;
         private Quaternion _rotationOffset;
 

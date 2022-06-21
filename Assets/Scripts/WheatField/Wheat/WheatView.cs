@@ -7,23 +7,18 @@ namespace WheatField.Wheat
     public class WheatView : MonoBehaviour, IWheatView, IHarvestable
     {
         [SerializeField] private Collider _collider;
-        [SerializeField] private GameObject _grownUpWheat;
-        [SerializeField] private GameObject _wheatLowerPart;
-        [SerializeField] private GameObject _wheatUpperPart;
-        
+        [SerializeField] private MeshRenderer _meshRenderer;
+
         public Transform Transform => transform;
         public Collider Collider => _collider;
-        public GameObject GrownUpWheat => _grownUpWheat;
-        public GameObject WheatLowerPart => _wheatLowerPart;
-        public GameObject WheatUpperPart => _wheatUpperPart;
+        public MeshRenderer MeshRenderer => _meshRenderer;
 
         public event Action WheatHarvested;
         public event Action ObjectDestroyed;
 
         private void Start()
         {
-            // _wheatLowerPart.SetActive(false);
-            // _wheatUpperPart.SetActive(false);
+            _meshRenderer.material = new Material(_meshRenderer.material);
             transform.localScale = new Vector3(1f, 1f, 1f);
             var randomAngle = Random.Range(0f, 90f);
             var randomRotation = new Quaternion(0f, (float) Math.Sin(randomAngle / 2), 0f, (float) Math.Cos(randomAngle / 2));

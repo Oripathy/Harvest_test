@@ -8,9 +8,8 @@ namespace WheatField.Wheat
     {
         public Transform Transform { get; }
         public Collider Collider { get; }
-        public GameObject GrownUpWheat { get; }
-        public GameObject WheatLowerPart { get; }
-        public GameObject WheatUpperPart { get; }
+
+        public MeshRenderer MeshRenderer { get; }
 
         public event Action WheatHarvested;
     }

@@ -12,6 +12,7 @@ namespace Player.InputHandler
         [SerializeField] private Canvas _canvas;
         
         private Camera _uiCamera;
+        private Touch _touch;
         private Vector3 _moveDirection;
         private Vector2 _startPosition;
         private float _scale;
@@ -85,27 +86,32 @@ namespace Player.InputHandler
 
         private void HandleMobileInput()
         {
-            var touch = Input.GetTouch(0);
-            
             if (Input.touchCount > 0)
             {
-                _isTouched = true;
-                _joystick.SetActive(true);
-                var sizeDelta = _outerJoystick.rectTransform.sizeDelta;
-                _startPosition = new Vector2
+                _touch = Input.GetTouch(0);
+
+                if (_touch.phase == TouchPhase.Began)
                 {
-                    x = touch.position.x / sizeDelta.x / _scale,
-                    y = touch.position.y / sizeDelta.y / _scale
-                };
-                _outerJoystick.rectTransform.anchoredPosition = touch.position / _scale;
-            }
-            else if (touch.phase == TouchPhase.Ended || touch.phase == TouchPhase.Canceled)
-            {
-                _isTouched = false;
-                _joystick.SetActive(false);
-                _moveDirection = Vector3.zero;
-                _startPosition = Vector2.zero;
-                DirectionReceived?.Invoke(_moveDirection);
+                    _touch = Input.GetTouch(0);
+                    _isTouched = true;
+                    _joystick.SetActive(true);
+                    var sizeDelta = _outerJoystick.rectTransform.sizeDelta;
+                    _startPosition = new Vector2
+                    {
+                        x = _touch.position.x / sizeDelta.x / _scale,
+                        y = _touch.position.y / sizeDelta.y / _scale
+                    };
+                    _outerJoystick.rectTransform.anchoredPosition = _touch.position / _scale;
+                }
+                else if (_touch.phase == TouchPhase.Ended || _touch.phase == TouchPhase.Canceled)
+                {
+                    _touch = default;
+                    _isTouched = false;
+                    _joystick.SetActive(false);
+                    _moveDirection = Vector3.zero;
+                    _startPosition = Vector2.zero;
+                    DirectionReceived?.Invoke(_moveDirection);
+                }
             }
 
             if (_isTouched)
@@ -113,8 +119,8 @@ namespace Player.InputHandler
                 var sizeDelta = _outerJoystick.rectTransform.sizeDelta;
                 var position = new Vector2
                 {
-                    x = touch.position.x / sizeDelta.x / _scale,
-                    y = touch.position.y / sizeDelta.y / _scale
+                    x = _touch.position.x / sizeDelta.x / _scale,
+                    y = _touch.position.y / sizeDelta.y / _scale
                 };
                 
                 _moveDirection = new Vector3(position.x - _startPosition.x, 0f, position.y - _startPosition.y);
@@ -133,7 +139,8 @@ namespace Player.InputHandler
         {
             if (hasFocus)
                 return;
-            
+
+            _touch = default;
             _isTouched = false;
             _joystick.SetActive(false);
             _moveDirection = Vector3.zero;

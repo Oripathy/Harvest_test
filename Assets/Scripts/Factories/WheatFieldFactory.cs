@@ -35,12 +35,12 @@ namespace Factories
             var wheatPosition = new Vector3(4f, 0f, 4f);
             const float step = 0.5f;
 
-            for (var i = 0; i < model.FieldSize[0] / step - 1; i++)
+            for (var i = 0; i < model.FieldSize[0] / step; i++)
             {
                 wheatPosition.z = 4f;
                 wheat.Add(new List<WheatModel>());
                 
-                for (var j = 0; j < model.FieldSize[1] / step - 1; j++)
+                for (var j = 0; j < model.FieldSize[1] / step; j++)
                 {
                     wheat[i].Add(_wheatFactory.CreateInstance(wheatPosition, view.transform));
                     wheatPosition.z -= step;

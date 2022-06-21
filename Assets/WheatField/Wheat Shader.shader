@@ -5,6 +5,7 @@ Shader "Unlit/Wheat Shader"
         _MainTex ("Texture", 2D) = "white" {}
         _AlphaCutOut ("Alpha CutOut", Range(0, 1)) = 0
         _Color ("Color", Color) = (1, 1, 1, 1)
+        _UVCut ("UV Cut", Range(0.1, 1)) = 1
     }
     SubShader
     {
@@ -23,11 +24,11 @@ Shader "Unlit/Wheat Shader"
 
             #include "UnityCG.cginc"
             #include "UnityLightingCommon.cginc"
-            #include "AutoLight.cginc"
-
+  
             struct appdata
             {
                 float4 vertex : POSITION;
+                float3 normal : NORMAL;
                 float2 uv : TEXCOORD0;
             };
 
@@ -43,17 +44,19 @@ Shader "Unlit/Wheat Shader"
             float4 _MainTex_ST;
             float _AlphaCutOut;
             float4 _Color;
+            float _UVCut;
 
-            v2f vert (appdata_base v)
+            v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = UnityObjectToClipPos(v.vertex);
-                o.uv = v.texcoord;
+                // o.uv = v.texcoord;
+                o.uv = TRANSFORM_TEX(v.uv, _MainTex);
                 half3 worldNormal = UnityObjectToWorldNormal(v.normal);
                 half n = max(0, dot(worldNormal, _WorldSpaceLightPos0.xyz));
                 o.diff = n * _LightColor0;
                 o.diff.rgb += ShadeSH9(half4(worldNormal, 1));
-                //o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                
                 o.uv.x += sin(_Time.y * o.uv.y * 3 * worldNormal.x) * 0.3;
                 UNITY_TRANSFER_FOG(o,o.vertex);
                 return o;
@@ -65,6 +68,9 @@ Shader "Unlit/Wheat Shader"
                 col *= _Color * i.diff * 0.7;
                 
                 if (col.a < _AlphaCutOut)
+                    discard;
+
+                if (i.uv.y > _UVCut)
                     discard;
                 
                 UNITY_APPLY_FOG(i.fogCoord, col);
